@@ -1274,6 +1274,7 @@ static void write_data(vorbis_encoder_helper *hp, void *data, unsigned int len) 
 int vorbis_encoder_helper_init(vorbis_encoder_helper *hp, unsigned int ch, unsigned long int rt, float q) {
 	hp->private_data = malloc(sizeof(vorbis_encoder_helper_block));
 	vorbis_encoder_helper_block *hb = (vorbis_encoder_helper_block *)hp->private_data;
+	memset(hb, 0, sizeof(vorbis_encoder_helper_block));
 	vorbis_info_init(&(hb->vi));
 	int ret = vorbis_encode_init_vbr(&(hb->vi), ch, rt, q);
 	if (ret != 0) return ret;

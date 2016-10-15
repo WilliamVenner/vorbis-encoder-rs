@@ -6,6 +6,6 @@ version = "0.1.0"
 authors = ["Hossein Noroozpour <hossein.noroozpour@gmail.com>"]
 
 [dependencies]
-vorbis-encoder = { path = "../"}
+vorbis-encoder = "*"
 vorbis-sys = "*"
 ogg-sys = "*"
