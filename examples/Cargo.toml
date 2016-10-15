@@ -1,0 +1,11 @@
+[package]
+name = "vorbis-encoder-examples"
+description = "Examples for vorbis-encoder"
+license = "MIT"
+version = "0.1.0"
+authors = ["Hossein Noroozpour <hossein.noroozpour@gmail.com>"]
+
+[dependencies]
+vorbis-encoder = { git = "https://github.com/Hossein-Noroozpour/vorbis-encoder-rs.git"}
+vorbis-sys = "*"
+ogg-sys = "*"
