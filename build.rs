@@ -11,6 +11,8 @@ fn main() {
 
     println!("{:?}", std::env::var("DEP_VORBIS_INCLUDE"));
 
+	println!("cargo:rustc-flags=-l vorbis -l ogg -l vorbisenc");
+
     let inc1 = std::env::var("DEP_VORBIS_INCLUDE").unwrap();
     let inc2 = std::env::var("DEP_VORBIS_SRC").unwrap();
     let inc3 = std::env::var("DEP_OGG_INCLUDE").unwrap();

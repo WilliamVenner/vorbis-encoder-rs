@@ -6,6 +6,6 @@ version = "0.1.0"
 authors = ["Hossein Noroozpour <hossein.noroozpour@gmail.com>"]
 
 [dependencies]
-vorbis-encoder = { git = "https://github.com/Hossein-Noroozpour/vorbis-encoder-rs.git"}
+vorbis-encoder = { path = "../"}
 vorbis-sys = "*"
 ogg-sys = "*"

@@ -13,5 +13,5 @@ vorbis-sys = "*"
 libc = "*"
 
 [build-dependencies]
-gcc = "*"
-pkg-config = "*"
+gcc = "0.3"
+pkg-config = "0.3"

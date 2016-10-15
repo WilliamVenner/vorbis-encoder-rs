@@ -112,16 +112,26 @@ void vorbis_encoder_helper_get_data(vorbis_encoder_helper *hp, unsigned char *da
 
 int vorbis_encoder_helper_encode(vorbis_encoder_helper *hp, int16_t *data, unsigned int bits) {
 	vorbis_encoder_helper_block *hb = (vorbis_encoder_helper_block *)hp->private_data;
-	unsigned int samples = bits / (hb->vi.channels);
-	float **buffer=vorbis_analysis_buffer(&(hb->vd), samples);
-	unsigned int i, j, data_index;
-	for (i = 0; i < samples; ++i) {
-		for (j = 0; j < (hb->vi.channels); ++j, ++data_index) {
-			buffer[j][i]= ((float)(data[data_index])) / 32768.0f;
+#define BUFSZ 4096
+	for(unsigned int read = BUFSZ < bits? BUFSZ: bits;
+			bits > 0;
+			bits -= read, data += read, read = BUFSZ < bits? BUFSZ: bits) {
+		unsigned int samples = read / (hb->vi.channels);
+		float **buffer=vorbis_analysis_buffer(&(hb->vd), samples);
+		unsigned int i, j, data_index = 0;
+		for (i = 0; i < samples; ++i) {
+			for (j = 0; j < (hb->vi.channels); ++j, ++data_index) {
+				buffer[j][i]= ((float)(data[data_index])) / 32768.0f;
+			}
+		}
+		vorbis_analysis_wrote(&(hb->vd), samples);
+		int res = vorbis_encoder_helper_block_out(hp);
+		if (res != 0) {
+			return res;
 		}
 	}
-	vorbis_analysis_wrote(&(hb->vd), samples);
-	return vorbis_encoder_helper_block_out(hp);
+	return 0;
+#undef BUFSZ
 }
 
 int vorbis_encoder_helper_free(vorbis_encoder_helper *hp) {
