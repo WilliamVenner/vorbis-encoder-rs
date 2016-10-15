@@ -1,0 +1,18 @@
+[package]
+name = "vorbis-encoder-rs"
+description = "Interface for the libvorbis-encoder library"
+license = "MIT"
+version = "0.0.1"
+authors = ["Hossein Noroozpour <hossein.noroozpour@gmail.com>"]
+build = "build.rs"
+links = "vorbis-encoder"
+
+[dependencies]
+ogg-sys = "*"
+vorbis-sys = "*"
+vorbisenc-sys = "*"
+libc = "*"
+
+[build-dependencies]
+gcc = "*"
+pkg-config = "*"
