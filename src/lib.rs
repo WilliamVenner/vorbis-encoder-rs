@@ -41,7 +41,7 @@ impl Encoder {
 		let res = unsafe { vorbis_encoder_helper_encode(
 			&mut self.e as *mut vorbis_encoder_helper,
 			samples.as_ptr() as *const libc::int16_t,
-			samples.len() as libc::c_uint)};
+			samples.len() as libc::c_int)};
 		if res != 0 {
 			return Err(res);
 		}
@@ -83,7 +83,7 @@ extern "C" {
 		hp: *mut vorbis_encoder_helper, ch: libc::c_uint, rt: libc::c_ulong,
 		q:  libc::c_float) -> libc::c_int;
 	fn vorbis_encoder_helper_encode(hp: *mut vorbis_encoder_helper, data: *const libc::int16_t,
-		bits: libc::c_uint) -> libc::c_int;
+		bits: libc::c_int) -> libc::c_int;
 	fn vorbis_encoder_helper_flush(hp: *mut vorbis_encoder_helper) -> libc::c_int;
 	fn vorbis_encoder_helper_get_data_length(hp: *const vorbis_encoder_helper) -> libc::c_uint;
 	fn vorbis_encoder_helper_get_data(hp: *mut vorbis_encoder_helper, data: *mut libc::c_uchar);

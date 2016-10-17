@@ -16,9 +16,9 @@ fn main() {
 			let mut v = vec![0i16; pcm.len() / 2];
 			let mut index = 0;
 			for i in 0..v.len() {
-				v[i] |= pcm[index] as i16;
+				v[i] |= ((pcm[index] as i16) << 8) & (255 << 8);
 				index += 1;
-				v[i] |= (pcm[index] as i16) << 8;
+				v[i] |= (pcm[index] as i16) & 255;
 				index += 1;
 			}
 			v
