@@ -1347,8 +1347,8 @@ int vorbis_encoder_helper_encode(vorbis_encoder_helper *hp, int16_t *data, int d
 	int read;
 	int samples;
   int16_t sample;
-  unsigned char *sample_address = (unsigned char *)&sample;
-  unsigned char tmp;
+  // unsigned char *sample_address = (unsigned char *)&sample;
+  // unsigned char tmp;
 	float **buffer;
 	int i, j, data_index = 0;
 	for(read = BUFSZ < bits? BUFSZ: bits;
@@ -1359,9 +1359,9 @@ int vorbis_encoder_helper_encode(vorbis_encoder_helper *hp, int16_t *data, int d
 		for (i = 0; i < samples; ++i) {
 			for (j = 0; j < (hb->vi.channels); ++j, ++data_index) {
         sample = data[data_index];
-        tmp = sample_address[0];
-        sample_address[0] = sample_address[1];
-        sample_address[1] = tmp;
+        // tmp = sample_address[0];
+        // sample_address[0] = sample_address[1];
+        // sample_address[1] = tmp;
 				buffer[j][i]= ((float)sample) / 32768.0f;
 			}
 		}
