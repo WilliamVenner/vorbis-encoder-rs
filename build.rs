@@ -1,6 +1,3 @@
-extern crate gcc;
-extern crate pkg_config;
-
 use std::path::Path;
 
 fn main() {
@@ -17,7 +14,7 @@ fn main() {
 	let inc2 = std::env::var("DEP_VORBIS_SRC").unwrap();
 	let inc3 = std::env::var("DEP_OGG_INCLUDE").unwrap();
 
-	gcc::Config::new()
+	cc::Build::new()
 		.file("libvorbis-encoder/vorbis-encoder.c")
 		.define("_USRDLL", None)
 		.define("LIBVORBIS_EXPORTS", None)
