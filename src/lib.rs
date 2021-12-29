@@ -67,9 +67,9 @@ impl Encoder {
 		let res = unsafe {
 			vorbis_encoder_helper_init(
 				&mut enc.e as *mut vorbis_encoder_helper,
-				channels as libc::c_uint,
-				rate as libc::c_ulong,
-				quality as libc::c_float,
+				channels as _,
+				rate as _,
+				quality as _,
 			)
 		};
 		match res {
@@ -82,8 +82,8 @@ impl Encoder {
 		unsafe {
 			let res = vorbis_encoder_helper_encode(
 				&mut self.e as *mut vorbis_encoder_helper,
-				samples.as_ptr() as *const libc::int16_t,
-				samples.len() as libc::c_int,
+				samples.as_ptr() as *const _,
+				samples.len() as _,
 			);
 
 			if res != 0 {
@@ -126,7 +126,7 @@ impl Drop for Encoder {
 
 extern "C" {
 	fn vorbis_encoder_helper_init(hp: *mut vorbis_encoder_helper, ch: libc::c_uint, rt: libc::c_ulong, q: libc::c_float) -> libc::c_int;
-	fn vorbis_encoder_helper_encode(hp: *mut vorbis_encoder_helper, data: *const libc::int16_t, bits: libc::c_int) -> libc::c_int;
+	fn vorbis_encoder_helper_encode(hp: *mut vorbis_encoder_helper, data: *const libc::c_short, bits: libc::c_int) -> libc::c_int;
 	fn vorbis_encoder_helper_flush(hp: *mut vorbis_encoder_helper) -> libc::c_int;
 	fn vorbis_encoder_helper_get_data_length(hp: *const vorbis_encoder_helper) -> libc::c_uint;
 	fn vorbis_encoder_helper_get_data(hp: *mut vorbis_encoder_helper, data: *mut libc::c_uchar);
