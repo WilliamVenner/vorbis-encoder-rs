@@ -37,7 +37,7 @@ impl Encoder {
 		}
 	}
 
-	pub fn encode(&mut self, samples: &Vec<i16>) -> Result<Vec<u8>, libc::c_int> {
+	pub fn encode(&mut self, samples: &[i16]) -> Result<Vec<u8>, libc::c_int> {
 		let res = unsafe { vorbis_encoder_helper_encode(
 			&mut self.e as *mut vorbis_encoder_helper,
 			samples.as_ptr() as *const libc::int16_t,
