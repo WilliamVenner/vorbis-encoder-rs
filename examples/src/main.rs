@@ -1,7 +1,3 @@
-#![feature(alloc_system)]
-extern crate alloc_system;
-extern crate vorbis_encoder;
-
 use std::io::{Read, Write};
 
 fn main() {
