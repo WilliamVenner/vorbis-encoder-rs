@@ -2,10 +2,11 @@
 name = "vorbis-encoder"
 description = "Interface for the libvorbis-encoder library"
 license = "MIT"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Hossein Noroozpour <hossein.noroozpour@gmail.com>"]
 build = "build.rs"
 links = "vorbis-encoder"
+edition = "2021"
 
 [dependencies]
 ogg-sys = "0.0.9"

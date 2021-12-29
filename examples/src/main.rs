@@ -2,10 +2,7 @@
 extern crate alloc_system;
 extern crate vorbis_encoder;
 
-use std::io::{
-	Read,
-	Write,
-};
+use std::io::{Read, Write};
 
 fn main() {
 	{
@@ -25,7 +22,9 @@ fn main() {
 		};
 		let mut file = std::fs::File::create("/home/thany/1.ogg").expect("Can not open the file.");
 		let mut encoder = vorbis_encoder::Encoder::new(2, 44100, 0.4).expect("Error in creating encoder");
-		file.write(encoder.encode(&pcm).expect("Error in encoding.").as_slice()).expect("Error in writing");
-		file.write(encoder.flush().expect("Error in flushing.").as_slice()).expect("Error in writing");
+		file.write(encoder.encode(&pcm).expect("Error in encoding.").as_slice())
+			.expect("Error in writing");
+		file.write(encoder.flush().expect("Error in flushing.").as_slice())
+			.expect("Error in writing");
 	}
 }
