@@ -1,5 +1,49 @@
 #![allow(non_snake_case)]
 
+#[derive(Debug)]
+pub enum VorbisError {
+	ReadError,
+	NotVorbis,
+	VersionMismatch,
+	BadHeader,
+	Hole,
+	InvalidSetup,
+	Unimplemented,
+	InternalError,
+	Unknown(i32),
+}
+impl std::fmt::Display for VorbisError {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			&VorbisError::ReadError => write!(f, "A read from media returned an error"),
+			&VorbisError::NotVorbis => write!(f, "Bitstream does not contain any Vorbis data"),
+			&VorbisError::VersionMismatch => write!(f, "Vorbis version mismatch"),
+			&VorbisError::BadHeader => write!(f, "Invalid Vorbis bitstream header"),
+			&VorbisError::InvalidSetup => write!(f, "Invalid setup request, eg, out of range argument or initial file headers are corrupt"),
+			&VorbisError::Hole => write!(f, "Interruption of data"),
+			&VorbisError::Unimplemented => write!(f, "Unimplemented mode; unable to comply with quality level request."),
+    		&VorbisError::InternalError => write!(f, "Internal libvorbis error"),
+   			&VorbisError::Unknown(code) => write!(f, "Unknown libvorbis error ({})", code),
+		}
+	}
+}
+impl std::error::Error for VorbisError {}
+impl From<i32> for VorbisError {
+    fn from(value: i32) -> Self {
+        match value {
+			vorbis_sys::OV_ENOTVORBIS => VorbisError::NotVorbis,
+			vorbis_sys::OV_EVERSION => VorbisError::VersionMismatch,
+			vorbis_sys::OV_EBADHEADER => VorbisError::BadHeader,
+			vorbis_sys::OV_EINVAL => VorbisError::InvalidSetup,
+			vorbis_sys::OV_HOLE => VorbisError::Hole,
+			vorbis_sys::OV_EREAD => VorbisError::ReadError,
+			vorbis_sys::OV_EIMPL => VorbisError::Unimplemented,
+			vorbis_sys::OV_EFAULT => VorbisError::InternalError,
+			_ => VorbisError::Unknown(value)
+		}
+    }
+}
+
 #[repr(C)]
 struct vorbis_encoder_helper {
 	private_data: *mut libc::c_void,
@@ -16,7 +60,7 @@ pub struct Encoder {
 }
 
 impl Encoder {
-	pub fn new(channels: u32, rate: u64, quality: f32) -> Result<Self, libc::c_int> {
+	pub fn new(channels: u32, rate: u64, quality: f32) -> Result<Self, VorbisError> {
 		let mut enc = Encoder {
 			e: vorbis_encoder_helper::new(),
 		};
@@ -30,11 +74,11 @@ impl Encoder {
 		};
 		match res {
 			0 => Ok(enc),
-			_ => Err(res),
+			_ => Err(res.into()),
 		}
 	}
 
-	pub fn encode(&mut self, samples: &[i16]) -> Result<Vec<u8>, libc::c_int> {
+	pub fn encode(&mut self, samples: &[i16]) -> Result<Vec<u8>, VorbisError> {
 		unsafe {
 			let res = vorbis_encoder_helper_encode(
 				&mut self.e as *mut vorbis_encoder_helper,
@@ -43,7 +87,7 @@ impl Encoder {
 			);
 
 			if res != 0 {
-				return Err(res);
+				return Err(res.into());
 			}
 
 			let s = vorbis_encoder_helper_get_data_length(&mut self.e as *mut vorbis_encoder_helper);
@@ -55,11 +99,11 @@ impl Encoder {
 		}
 	}
 
-	pub fn flush(&mut self) -> Result<Vec<u8>, libc::c_int> {
+	pub fn flush(&mut self) -> Result<Vec<u8>, VorbisError> {
 		unsafe {
 			let res = vorbis_encoder_helper_flush(&mut self.e as *mut vorbis_encoder_helper);
 			if res != 0 {
-				return Err(res);
+				return Err(res.into());
 			}
 
 			let s = vorbis_encoder_helper_get_data_length(&mut self.e as *mut vorbis_encoder_helper);
